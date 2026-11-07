@@ -1,0 +1,53 @@
+## IT Help Desk - .gitignore (Documentation & DevOps Engineer)
+
+# Build output
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+publish/
+artifacts/
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.csproj.user
+*.DotSettings.user
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+project.lock.json
+
+# Test results
+TestResults/
+*.trx
+coverage/
+
+# Logs
+*.log
+logs/
+
+# Secrets and local configuration (NEVER commit real passwords / connection strings)
+appsettings.Local.json
+appsettings.*.local.json
+secrets.json
+.env
+.env.*
+*.pfx
+
+# Local databases
+*.mdf
+*.ldf
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini

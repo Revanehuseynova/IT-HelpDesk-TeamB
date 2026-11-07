@@ -1,0 +1,55 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Ana səhifə";
+}
+
+<div class="hero rounded-3 p-4 p-md-5 mb-4">
+    <h1 class="display-6 fw-bold">Universitet IT Help Desk</h1>
+    <p class="lead mb-4">
+        Texniki problemi qeydiyyata alın, müraciətinizin vəziyyətini izləyin.
+        IT mütəxəssisləri müraciəti qəbul edib həll edir.
+    </p>
+    @if (Model.IsAuthenticated)
+    {
+        <a class="btn btn-primary btn-lg me-2" asp-controller="Ticket" asp-action="Create">Yeni müraciət yarat</a>
+        <a class="btn btn-outline-secondary btn-lg" asp-controller="Ticket" asp-action="Index">Müraciətlərə bax</a>
+    }
+    else
+    {
+        <a class="btn btn-primary btn-lg me-2" asp-controller="Account" asp-action="Login">Daxil ol</a>
+        <a class="btn btn-outline-secondary btn-lg" asp-controller="Account" asp-action="Register">Qeydiyyatdan keç</a>
+    }
+</div>
+
+@if (Model.IsAuthenticated)
+{
+    <h2 class="h4 mb-3">
+        Statistika
+        <small class="text-muted fs-6">(@(Model.SeesAllTickets ? "bütün müraciətlər" : "sizin müraciətləriniz"))</small>
+    </h2>
+    <div class="row g-3">
+        <div class="col-6 col-lg">
+            <a class="text-decoration-none" asp-controller="Ticket" asp-action="Index">
+                <div class="card stat-card h-100 border-dark">
+                    <div class="card-body text-center">
+                        <div class="stat-number">@Model.Total</div>
+                        <div class="text-muted">Ümumi</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        @foreach (var item in Model.ByStatus)
+        {
+            <div class="col-6 col-lg">
+                <a class="text-decoration-none" asp-controller="Ticket" asp-action="Index" asp-route-status="@item.Key">
+                    <div class="card stat-card h-100">
+                        <div class="card-body text-center">
+                            <div class="stat-number">@item.Value</div>
+                            <partial name="_StatusBadge" model="item.Key" />
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+}

@@ -1,0 +1,70 @@
+@model TicketDetailsViewModel
+@{
+    var t = Model.Ticket;
+    ViewData["Title"] = $"Müraciət #{t.Id}";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-action="Index">Müraciətlər</a></li>
+        <li class="breadcrumb-item active" aria-current="page">#@t.Id</li>
+    </ol>
+</nav>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                    <h1 class="h4">@t.Title</h1>
+                    <div class="text-nowrap">
+                        <partial name="_PriorityBadge" model="t.Priority" />
+                        <partial name="_StatusBadge" model="t.Status" />
+                    </div>
+                </div>
+                <hr />
+                <p class="ticket-description">@t.Description</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card mb-3">
+            <div class="card-header">Detallar</div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">Kateqoriya</span><span>@t.Category?.Name</span></li>
+                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">Yaradan</span><span>@t.CreatedBy?.FullName</span></li>
+                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">Təyin olunub</span><span>@(t.AssignedTo?.FullName ?? "—")</span></li>
+                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">Yaradılıb</span><span>@t.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</span></li>
+                <li class="list-group-item d-flex justify-content-between"><span class="text-muted">Yenilənib</span><span>@t.UpdatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</span></li>
+            </ul>
+        </div>
+
+        @if (Model.CanManage)
+        {
+            <div class="card">
+                <div class="card-header">IT mütəxəssisi üçün əməliyyatlar</div>
+                <div class="card-body">
+                    @if (t.Status == TicketStatus.New)
+                    {
+                        <form asp-action="Accept" asp-route-id="@t.Id" method="post" class="mb-3">
+                            <button type="submit" class="btn btn-success w-100">Müraciəti qəbul et</button>
+                        </form>
+                    }
+                    <form asp-action="ChangeStatus" asp-route-id="@t.Id" method="post">
+                        <label for="status" class="form-label">Statusu dəyiş</label>
+                        <div class="input-group">
+                            <select id="status" name="status" class="form-select">
+                                @foreach (var item in Model.StatusItems)
+                                {
+                                    <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                                }
+                            </select>
+                            <button type="submit" class="btn btn-primary">Yadda saxla</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</div>

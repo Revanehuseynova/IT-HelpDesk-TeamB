@@ -1,0 +1,94 @@
+@model TicketListViewModel
+@{
+    ViewData["Title"] = "Müraciətlər";
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+    <h1 class="h3 mb-0">Müraciətlər <span class="badge text-bg-light border">@Model.Tickets.Count</span></h1>
+    <a class="btn btn-primary" asp-action="Create">+ Yeni müraciət</a>
+</div>
+
+<form method="get" asp-action="Index" class="card card-body mb-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+            <label for="search" class="form-label">Axtarış (başlıq)</label>
+            <input id="search" name="search" value="@Model.Search" class="form-control" maxlength="150" placeholder="məs. wifi" />
+        </div>
+        <div class="col-md-3">
+            <label for="categoryId" class="form-label">Kateqoriya</label>
+            <select id="categoryId" name="categoryId" class="form-select" data-autosubmit>
+                <option value="">Hamısı</option>
+                @foreach (var item in Model.Categories)
+                {
+                    <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="status" class="form-label">Status</label>
+            <select id="status" name="status" class="form-select" data-autosubmit>
+                <option value="">Hamısı</option>
+                @foreach (var item in Model.Statuses)
+                {
+                    <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-secondary flex-fill">Filtrlə</button>
+            @if (Model.HasFilter)
+            {
+                <a class="btn btn-outline-secondary" asp-action="Index">Sıfırla</a>
+            }
+        </div>
+    </div>
+</form>
+
+@if (Model.Tickets.Count == 0)
+{
+    <div class="alert alert-info">
+        @(Model.HasFilter ? "Filtrə uyğun müraciət tapılmadı." : "Hələ heç bir müraciət yoxdur.")
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Başlıq</th>
+                    <th>Kateqoriya</th>
+                    <th>Prioritet</th>
+                    <th>Status</th>
+                    @if (Model.SeesAllTickets)
+                    {
+                        <th>Yaradan</th>
+                    }
+                    <th>Təyin olunub</th>
+                    <th>Tarix</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model.Tickets)
+                {
+                    <tr>
+                        <td>@t.Id</td>
+                        <td><a asp-action="Details" asp-route-id="@t.Id">@t.Title</a></td>
+                        <td>@t.Category?.Name</td>
+                        <td><partial name="_PriorityBadge" model="t.Priority" /></td>
+                        <td><partial name="_StatusBadge" model="t.Status" /></td>
+                        @if (Model.SeesAllTickets)
+                        {
+                            <td>@t.CreatedBy?.FullName</td>
+                        }
+                        <td>@(t.AssignedTo?.FullName ?? "—")</td>
+                        <td class="text-nowrap">@t.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                        <td><a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@t.Id">Ətraflı</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

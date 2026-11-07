@@ -1,0 +1,38 @@
+/* IT Help Desk - site styles (Frontend Developer) */
+:root {
+    --hd-accent: #0d6efd;
+}
+
+body {
+    background-color: #f8f9fa;
+}
+
+.hero {
+    background: linear-gradient(135deg, #e7f1ff 0%, #ffffff 100%);
+    border: 1px solid #dbe7fb;
+}
+
+.stat-card {
+    transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 .4rem 1rem rgba(0, 0, 0, .1);
+}
+
+.stat-number {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #212529;
+}
+
+.ticket-description {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.table > :not(caption) > * > * {
+    vertical-align: middle;
+}
